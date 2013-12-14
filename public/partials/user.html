@@ -1,0 +1,82 @@
+<div>
+
+
+<div class='container brand'>Hello, {{user.FirstName}} {{user.LastName}}</div>
+<hr/>
+<div>{{message}}</div>
+<div class='row'>
+	<div class='span7'>
+		<label>Search Numbers: </label>
+		<input ng-model='searchNumber' ng-change='numberSearch();' default="search"/>
+		<span class="btn btn-success" style='font-size:small' ng-click="getPhoneNumbers()">
+				Refresh</span><br/>
+		<label>Phone Numbers:</label>
+		<div class="well">
+			<div ng-repeat="item in phoneList">
+				<div class='row' style='vertical-align: middle; border-bottom: 1px; margin-bottom: 5px'>
+					<div class='span1' style='font-size:small'>
+						{{item.Number}}
+					</div>
+					<div class='span1'>
+						<span class='badge badge-important' style='font-size:x-small'>$ : {{item.Balance}}</span> 		
+					</div>
+					<div class='span4'> 											
+						<a class='btn btn-info small' style='font-size:x-small' 
+							ng-click='rechargeNum(item.Number)'>Recharge</a> 
+						<a class='btn btn-danger small' style='font-size:x-small' 
+							ng-click='deleteNum(item.Number)'>Delete</a>
+						<a class='btn btn-default small' style='font-size:x-small' 
+							ng-click='groupNum(item.Number)'>Group</a>
+					</div>
+				</div>
+				
+				
+			</div>
+		</div>
+	</div>
+	<div class='span5'>
+		<div><label>Enter a new number: </label>
+			<input ng-model="newnumber"/>
+		<span class="btn"ng-click="addNewNumber()">Add</span>
+		</div>
+
+		<label>Group Recharge:</label>
+		<div class='well'>
+			<div ng-repeat="item in groupList">
+				<div class='row' style='vertical-align: middle; border-bottom: 1px; margin-bottom: 5px'>
+					<div class='span1' style='font-size:small'>
+						{{item.Number}}
+					</div>
+					<div class='span1'>
+						<span class='badge' style='font-size:x-small'>$ : {{item.Balance}}</span> 		
+					</div>
+					<div class='span2'> 											
+						<a class='btn btn-default small' style='font-size:x-small' 
+							ng-click='ungroupNum(item.Number)'>Remove</a> 						
+					</div>
+				</div>								
+			</div>
+
+		</div>
+		<div class='btn btn-info'>Recharge Group</div>	
+		<form method="post" action="/user/logout">
+			<input type="submit" value="logout"></input>
+		</form>
+	</div>
+
+</div>
+
+
+<br/>
+
+
+<br/>
+
+
+
+
+
+
+
+
+</div>
