@@ -1,0 +1,50 @@
+<div>
+<div class='label label-warning'>{{message}}</div>
+<div class='row'>
+	<div class='span4'>
+
+		<label>Provider : </label>
+		<select ng-model="selectedProvider" ng-change="changeProvider()">
+			<option ng-repeat="k in providersList">{{k.name}}</option>			
+		</select>
+
+		<label>Country : </label>
+		<select ng-model="selectedCountry" ng-change='changeCountry()'>
+			<option ng-repeat="k in countries">{{k}}</option>
+		</select>
+
+		<label>Area : </label>
+		
+		<select ng-model="selectedArea">
+			<option ng-repeat="k in areas">{{k}}</option>
+		</select>
+
+	</div>
+	<div class='span4'>
+		<label>Amount : </label>
+		<input ng-model='amount'></input>
+
+
+		<label>ID : </label>
+		<input ng-model='id'></input>
+
+		<label>Password :</label>
+		<input ng-model='password' type='password'></input>
+	</div>
+	<div class='span2'>
+		<label>Numbers:</label>
+		<div ng-repeat="number in numbers">{{number}}</div>
+	</div>
+</div>
+
+<span class='btn btn-success' ng-click='rechargeClick()'>Recharge</span>
+<a href="/user" class='btn btn-default'>Back to Home</a><br/>
+
+<hr/>
+<label>Recharge Log: </label>
+<div class='row' ng-repeat="item in result">
+	<div class='span2'>{{item.number}}</div>
+	<div class='span2'>{{item.status}}</div>
+</div>
+
+

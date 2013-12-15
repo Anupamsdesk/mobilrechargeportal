@@ -1,22 +1,22 @@
 <div>
-	<table>
-		<tr>
-			<td>Email</td>
-			<td><input id="email" ng-model="uname"/></td>
-		</tr>
-		<tr>
-			<td>Password:</td>
-			<td><input id="pass" type="password" ng-model="password"/></td>
-		</tr>
-		<tr>
-			<td colspan="2">
-				<input type="button" value="login" ng-click="submit()"/>
-			</td>
-		</tr>
-		<tr>
-			<td colspan="2">
-				{{message}}
-			</td>
-		</tr>
-	</table>
+
+	<div class='hero-unit'>
+		<h2>Login</h2>
+		<label> Email : </label>
+		<input id="email" ng-model="uname"/>
+
+		<label> Password : </label>
+		<input id="pass" type="password" ng-model="password"/>
+		<hr/>
+		
+		<a class="btn btn-default" ng-show="notProcessing" ng-click="submit()">Login</a>
+		<br/>
+		<div class='label label-info'>
+					{{message}}
+		</div>
+	</div>
+	
+	
+	
+		
 </div>

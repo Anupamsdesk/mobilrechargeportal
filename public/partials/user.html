@@ -1,9 +1,17 @@
 <div>
 
+<div class='row'>
+	<div class='span6 brand'>Hello, {{user.FirstName}} {{user.LastName}}
+		<br/><div class='label label-warning'>{{message}}</div>
+	</div>
+	<div class='span2 pull-right'>
+	<form method="post" action="/user/logout">
+			<input class='btn btn-warning' type="submit" value="logout"></input>
+		</form>
+	</div>
+</div>
 
-<div class='container brand'>Hello, {{user.FirstName}} {{user.LastName}}</div>
-<hr/>
-<div>{{message}}</div>
+
 <div class='row'>
 	<div class='span7'>
 		<label>Search Numbers: </label>
@@ -37,7 +45,7 @@
 	<div class='span5'>
 		<div><label>Enter a new number: </label>
 			<input ng-model="newnumber"/>
-		<span class="btn"ng-click="addNewNumber()">Add</span>
+		<span class="btn" ng-show="notProcessingAdd" ng-click="addNewNumber()">Add</span>
 		</div>
 
 		<label>Group Recharge:</label>
@@ -58,10 +66,8 @@
 			</div>
 
 		</div>
-		<div class='btn btn-info'>Recharge Group</div>	
-		<form method="post" action="/user/logout">
-			<input type="submit" value="logout"></input>
-		</form>
+		<div class='btn btn-info' ng-click='rechargeNums()'>Recharge Group</div>	
+		
 	</div>
 
 </div>

@@ -1,5 +1,7 @@
 <div>
-
+<div class='label label-warning'>
+			{{message}}
+		</div>
 <table>
 	<tr>
 		<td>First Name: </td>
@@ -19,14 +21,13 @@
 	</tr>
 	<tr>
 		<td colspan="2">
-			<input type="button" value="submit" ng-click="submit()"/>
+			<a class="btn btn-info" ng-show="notProcessing" ng-click="submit()">Submit</a>
+			<a class="btn btn-info" ng-show="notProcessing" ng-click="login()">Login Page</a>
 		</td>
+		
 	</tr>
-	<tr>
-		<td colspan="2">
-			{{message}}
-		</td>
-	</tr>
+	
 </table>			
  
+		
 </div>

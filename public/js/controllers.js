@@ -21,10 +21,15 @@ function indexCtrl($scope, $http, $location, userService){
 function mainCtrl($scope,$location){
 	$location.url('/home');
 }
-function userRegistrationCtrl($scope,userService){
+function userRegistrationCtrl($scope,$location,userService){
 	$scope.message="Register user";
+	$scope.notProcessing=true;
+	$scope.login= function(){
+		$location.url('/login');
+	}
 	$scope.submit = function(){
-		//console.log("I am userRegistrationCtrl Controller");	
+		$scope.notProcessing=false;
+		$scope.message="registering user please wait...";
 		var userObj = {
 				FirstName: $scope.fname, 
 				LastName:$scope.lname, 
@@ -39,17 +44,22 @@ function userRegistrationCtrl($scope,userService){
 					$scope.message="Sorry! "+ data.msg;
 				else
 					$scope.message="Congratulations! User is registered"
+				$scope.notProcessing=true;
 			},function(err){
 				console.dir(err);
 				console.log('connect failure');
+				$scope.notProcessing=true;
 				$scope.message = "Sorry! Some error occured!";
 			});
 		
 	}	
 }
 function loginCtrl($scope,$location,userService){
-	$scope.message="login";
+	$scope.message="please enter your registered email id and password";
+	$scope.notProcessing=true;
 	$scope.submit = function(){
+		$scope.notProcessing=false;
+		$scope.message="logging please wait...";
 		//console.log("I am userRegistrationCtrl Controller");	
 		var userObj = {				
 				Password: $scope.password,
@@ -57,24 +67,30 @@ function loginCtrl($scope,$location,userService){
 		};
 		console.log('submitted!');
 		var promise = userService.loginUser(userObj);
-		promise.then(function(data){
-				console.log('connect success');
+		promise.then(function(data){				
+				$scope.message="done!";
 				if (data.status === "failure")
 					$scope.message="Sorry! "+ data.msg;
 				else{
 					$scope.message="Login Success";	
 					$location.url('/user');
 				}
+				$scope.notProcessing=true;
 					
 			},function(err){
 				console.dir(err);
 				console.log('connect failure');
 				$scope.message = "Sorry! Some error occured!";
+				$scope.notProcessing=true;
 			});
 
 	}	
 }
 function userCtrl($scope,$location,userService){
+	$scope.message="loading..."
+	$scope.notProcessingAdd=true;
+
+
 	function validateSession(){
 		userService.validateSession().then(function(data){
 		console.log(data);
@@ -96,39 +112,47 @@ function userCtrl($scope,$location,userService){
 
 	$scope.message="";
 	
-
 	$scope.getPhoneNumbers = function(){
 		validateSession();
+		$scope.message="loading..."
 		userService.phoneNumbers().then(function(obj){
 			console.dir(obj);
 			$scope.groupList=[];
 			$scope.phoneList=[];
 			if (!obj.data || obj.data.length === 0){
-				$scope.message = "Empty list";
+				$scope.message = "Start by adding a few phone numbers";
 				$scope.mainList=[];				
 			}else{
 				$scope.mainList=obj.data;
+				$scope.message="Loaded successfully!"
 			}
 			for(var i=0; i<$scope.mainList.length; i++){
 				$scope.phoneList.push($scope.mainList[i]);
 			}
 		},function(err){
+			$scope.message = "some error occured";
 			console.dir(err);
 		});
 	};
 	$scope.addNewNumber = function(){
+		$scope.notProcessingAdd = false;
 		validateSession();
 		var ind = getIndexFor( $scope.newnumber, $scope.mainList) ;
 		if (ind >=0){
 			$scope.message="This number already exists!";
+			$scope.notProcessingAdd = true;
 			return;
 		}
+		$scope.message = "adding new number....";
 		userService.addPhoneNumber({Number: $scope.newnumber}).then(function(obj){
-			console.dir(obj);
+			$scope.message = "done!";
 			$scope.getPhoneNumbers();
+			$scope.notProcessingAdd = true;
 		},function(err){
+			$scope.message = "some error occured";
 			console.dir(err);
-		})
+			$scope.notProcessingAdd = true;
+		});
 	};
 
 	$scope.numberSearch = function(){
@@ -151,10 +175,22 @@ function userCtrl($scope,$location,userService){
 	}
 
 	$scope.rechargeNum = function(num){
-		console.log("RECHARGE");
+		//console.log("RECHARGE");
+		$location.url('/recharge?numbers='+num+";");
 	};
+
+	$scope.rechargeNums = function(){
+		//console.log("RECHARGE");
+		var str='';
+		$scope.groupList.forEach(function(item){
+			str+=item.Number+";"
+		});
+		$location.url('/recharge?numbers='+str);
+	};
+
 	$scope.deleteNum = function(num){
-		console.log("DELETE");
+		//console.log("DELETE");
+		$scope.message = "delete was not implemented!";
 	};
 	$scope.groupNum = function(num){
 		var ind = getIndexFor(num,$scope.phoneList);
@@ -162,7 +198,6 @@ function userCtrl($scope,$location,userService){
 		$scope.phoneList.splice(ind,1);
 	};
 
-<<<<<<< HEAD
 	$scope.ungroupNum = function(num){
 		var ind = getIndexFor(num,$scope.groupList);
 		$scope.phoneList.push($scope.groupList[ind]);
@@ -183,13 +218,120 @@ function userCtrl($scope,$location,userService){
 	$scope.getPhoneNumbers();
 
 }
+
+
+
+function rechargeCtrl($scope,$location,userService, providerApiService){
+	$scope.numbers=[];
+	$scope.message='loading please wait...';
+	var x = $location.search();
+	$scope.numbers = x.numbers.split(";")
+	$scope.numbers.pop();
+	$scope.providersList =[]; 
+	$scope.countries=[];
+	$scope.selectedProvider='';
+	$scope.selectedCountry = '';
+	$scope.selectedArea ='';
+
+	$scope.result=[];
+
+	$scope.amount=0.0;
+	$scope.id='';
+	$scope.password='';
+
+	userService.providers().then(function(obj){
+			console.dir(obj);
+			$scope.providersList={};
+			obj.data.forEach(function(item){
+				$scope.providersList[item.name] = item;
+			});						
+			$scope.selectedProvider = obj.data[0].name;
+			$scope.changeProvider();
+			$scope.message='loaded successfully!';
+		},function(err){
+			console.dir(err);
+			$scope.message='sorry! some error occured!';
+		});
+	$scope.changeProvider=function(){
+		console.log('change provider called!');
+		$scope.loadCountries();
+	}
+	$scope.changeCountry=function(){
+		console.log('change provider called!');
+		$scope.loadAreas();
+	}
+
+	$scope.loadCountries = function(){
+		var subs = $scope.providersList[$scope.selectedProvider].subProviders;
+		$scope.countries=[];
+
+		subs.forEach(function(item){
+			$scope.countries.push(item.country);
+		});
+		$scope.selectedCountry = $scope.countries[0];
+		$scope.loadAreas();
+	}
+	$scope.loadAreas = function(){
+		var subs = $scope.providersList[$scope.selectedProvider].subProviders;
+		$scope.areas = [];
+		subs.forEach(function(item){
+			if (item.country === $scope.selectedCountry){
+				item.circles.forEach(function(circle){
+					$scope.areas.push(circle.name);
+				});
+				$scope.selectedArea = $scope.areas[0];
+			}
+		})
+	};
+
+	$scope.rechargeClick = function(){
+		$scope.result=[];
+		$scope.message='';
+		if ($scope.amount>0.0 && $scope.id !== '' && $scope.password !==''){
+			console.log('validated');
+			$scope.numbers.forEach(function(item){
+				providerApiService.rechargeNumber(item,$scope.amount,
+				$scope.providersList[$scope.selectedProvider]).then(function(data){
+					console.log(data);
+					if (data.status){
+
+						$scope.result.push({'number': item, 'status': 'success'});
+
+						userService.recharge(
+							{	'number': item, 
+								'balance':$scope.amount,
+								'provider': $scope.selectedProvider,
+								'area':$scope.selectedCountry,
+								'circle': $scope.selectedArea
+							}).then(function(obj){											
+						},function(err){
+							$scope.message="There was problem syncing the recharge amount with server"
+						});
+
+					}else $scope.result.push({'number': item, 'status': 'failure'});
+				}, function(err){
+					$scope.result.push({'number': item, 'status': 'failure'});
+					console.log(err);					
+				});
+			});
+			//$scope.$new().$digest();
+		}else{
+			console.log('Invalid');
+			$scope.message='Invalid inputs!'			
+		}
+	};
+
+
+};
+
 angular.module('myApp.controllers', [])
 	.controller('aboutCtrl', aboutCtrl)
 	.controller('indexCtrl', ['$scope','$http','$location','userService',indexCtrl])
 	.controller('mainCtrl', ['$scope','$location','userService',mainCtrl])
-	.controller('userRegistrationCtrl', ['$scope','userService',userRegistrationCtrl])
+	.controller('userRegistrationCtrl', ['$scope','$location','userService',userRegistrationCtrl])
 	.controller('loginCtrl', ['$scope','$location','userService',loginCtrl])
 	.controller('userCtrl', ['$scope','$location','userService',userCtrl])
+	.controller('rechargeCtrl', ['$scope','$location','userService','providerApiService',rechargeCtrl])
 	;
 
 /*

@@ -45,7 +45,7 @@ var model = function (context){
 	this.update = function(obj){
 		AssureHasId(obj);
 		AssureIsValid(obj);
-
+		
 		var id = obj._id;
 		delete obj._id;
 		return context.update(id, obj);

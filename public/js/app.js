@@ -26,6 +26,10 @@ angular.module('myApp',
         templateUrl:'partials/user.html',
         controller: 'userCtrl'
       })
+      .when('/recharge',{
+        templateUrl: 'partials/recharge.html',
+        controller: 'rechargeCtrl'
+      })
       /*
       when ('/addPost',{
     	  templateUrl: 'partials/addPost',

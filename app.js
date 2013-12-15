@@ -8,6 +8,8 @@ var express = require('express')
   ;
 var users = config.userModel;
 var phones = config.phoneModel;
+var providers = config.providerModel;
+var transactions = config.transactionModel;
 
 var express = require('express'),
   routes = require('./routes'),
@@ -17,6 +19,9 @@ var express = require('express'),
 
 var app = module.exports = express();
 app.set('port', process.env.PORT || 3000);
+
+console.log(process.env);
+  
 
 // Configuration
 app.set('view engine', 'ejs');
@@ -31,14 +36,20 @@ app.use(express.session({ secret: 'keyboard cat', cookie: { maxAge: 60000 }}))
 app.use(app.router);
 
 
-
-
 app.configure('development', function(){
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
 
 // Routes
+
+app.get('/provider', function(req,res){
+  providers.find().then(function(data){
+    res.send({"status":"success", "data": data});
+  }, function(eer){
+    res.send({"status":"failure"});
+  });
+});
 
 app.get('/phone', function(req,res){
   if (req.session && req.session.user){
@@ -57,7 +68,26 @@ app.post('/phone/add', function(req,res){
     });
   }else res.redirect('/');
 });
-
+app.post('/phone/recharge', function(req,res){
+  if (req.session && req.session.user){
+    console.log(req.body);
+    var b = req.body;
+    phones.updateBalance(req.session.user._id, req.body.number, req.body.balance, function(obj){
+        if (obj){
+          transactions.insert(req.session.user._id, req.body.number, req.body.balance,
+              req.body.provider, req.body.area, req.body.circle
+            ).then(function(val){
+              res.send({"status": true});
+            }, function(err){
+              res.send({"status":false});
+            });
+        }else res.send({"status":obj});  
+    });
+    
+  }else{
+    res.send({'status': 'invalid login'});
+  }
+});
 
 
 app.post('/user/register', function(req,res){    
@@ -92,8 +122,7 @@ app.post('/user/login', function(req,res){
             //debug('saved');
             //res.end(data, encoding);
         });
-        console.dir(req.session);
-        
+        console.dir(req.session);        
       });     
       res.redirect("/");
       //console.log(req.session) ;

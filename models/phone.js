@@ -10,6 +10,28 @@ var model = function(context){
 		return context.find({UserId : userid});
 	}
 
+	this.findNumberAndUser = function(userid, number){
+		return context.find({UserId: userid, Number: number});
+	}
+
+
+	this.updateBalance = function(userid, number, amount, cb){
+		context.close();
+		this.findNumberAndUser(userid, number).then(function(obj){
+			context.close();
+			obj[0].Balance = obj[0].Balance + (+amount);
+			console.dir(obj[0]);
+			var id = obj[0]._id.toString();
+			delete(obj[0]._id);
+			console.dir(obj[0]);
+			context.update(id, obj[0]).then(function(d){
+				cb(true);
+			}, function(e){ cb(false);})
+		}, function(x){
+			cb(false);
+		});
+	}
+
 
 	this.create = function (obj, userid){
 		obj.UserId=userid;
