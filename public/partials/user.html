@@ -20,7 +20,7 @@
 				Refresh</span><br/>
 		<label>Phone Numbers:</label>
 		<div class="well">
-			<div ng-repeat="item in phoneList">
+			<div ng-repeat="item in phoneList" ng-show="(!showLoading)">
 				<div class='row' style='vertical-align: middle; border-bottom: 1px; margin-bottom: 5px'>
 					<div class='span1' style='font-size:small'>
 						{{item.Number}}
@@ -40,6 +40,7 @@
 				
 				
 			</div>
+			<img ng-show="showLoading" src="img/ajax-loader.gif"/>
 		</div>
 	</div>
 	<div class='span5'>
@@ -66,7 +67,7 @@
 			</div>
 
 		</div>
-		<div class='btn btn-info' ng-click='rechargeNums()'>Recharge Group</div>	
+		<div class='btn btn-info' ng-show="(groupList.length > 0)" ng-click='rechargeNums()'>Recharge Group</div>	
 		
 	</div>
 

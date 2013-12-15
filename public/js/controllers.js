@@ -89,7 +89,7 @@ function loginCtrl($scope,$location,userService){
 function userCtrl($scope,$location,userService){
 	$scope.message="loading..."
 	$scope.notProcessingAdd=true;
-
+	$scope.showLoading=true;
 
 	function validateSession(){
 		userService.validateSession().then(function(data){
@@ -113,6 +113,7 @@ function userCtrl($scope,$location,userService){
 	$scope.message="";
 	
 	$scope.getPhoneNumbers = function(){
+		$scope.showLoading=true;
 		validateSession();
 		$scope.message="loading..."
 		userService.phoneNumbers().then(function(obj){
@@ -126,10 +127,12 @@ function userCtrl($scope,$location,userService){
 				$scope.mainList=obj.data;
 				$scope.message="Loaded successfully!"
 			}
+			$scope.showLoading=false;
 			for(var i=0; i<$scope.mainList.length; i++){
 				$scope.phoneList.push($scope.mainList[i]);
 			}
 		},function(err){
+			$scope.showLoading=false;
 			$scope.message = "some error occured";
 			console.dir(err);
 		});
@@ -223,6 +226,7 @@ function userCtrl($scope,$location,userService){
 
 function rechargeCtrl($scope,$location,userService, providerApiService){
 	$scope.numbers=[];
+	$scope.showLoading=true;
 	$scope.message='loading please wait...';
 	var x = $location.search();
 	$scope.numbers = x.numbers.split(";")
@@ -248,8 +252,10 @@ function rechargeCtrl($scope,$location,userService, providerApiService){
 			$scope.selectedProvider = obj.data[0].name;
 			$scope.changeProvider();
 			$scope.message='loaded successfully!';
+			$scope.showLoading=false;
 		},function(err){
 			console.dir(err);
+			$scope.showLoading=false;
 			$scope.message='sorry! some error occured!';
 		});
 	$scope.changeProvider=function(){
@@ -285,6 +291,7 @@ function rechargeCtrl($scope,$location,userService, providerApiService){
 	};
 
 	$scope.rechargeClick = function(){
+		$scope.showLoading=true;
 		$scope.result=[];
 		$scope.message='';
 		if ($scope.amount>0.0 && $scope.id !== '' && $scope.password !==''){
@@ -293,6 +300,7 @@ function rechargeCtrl($scope,$location,userService, providerApiService){
 				providerApiService.rechargeNumber(item,$scope.amount,
 				$scope.providersList[$scope.selectedProvider]).then(function(data){
 					console.log(data);
+					$scope.showLoading=false;
 					if (data.status){
 
 						$scope.result.push({'number': item, 'status': 'success'});
@@ -311,13 +319,15 @@ function rechargeCtrl($scope,$location,userService, providerApiService){
 					}else $scope.result.push({'number': item, 'status': 'failure'});
 				}, function(err){
 					$scope.result.push({'number': item, 'status': 'failure'});
-					console.log(err);					
+					console.log(err);	
+					$scope.showLoading=false;				
 				});
 			});
 			//$scope.$new().$digest();
 		}else{
 			console.log('Invalid');
-			$scope.message='Invalid inputs!'			
+			$scope.message='Invalid inputs!'	
+			$scope.showLoading=false;		
 		}
 	};
 

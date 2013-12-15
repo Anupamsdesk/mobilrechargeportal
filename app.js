@@ -31,7 +31,13 @@ app.use(express.static(__dirname + '/public'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.cookieParser('dskljkdsjkldjsjlkdjsjljsdkljljs'));
-app.use(express.session({ secret: 'keyboard cat', cookie: { maxAge: 60000 }}))
+app.use(express.session({ secret: 'keyboard cat', 
+  maxAge  : new Date(Date.now() + 3600000), //1 Hour
+  expires : new Date(Date.now() + 3600000), 
+  cookie: { 
+    maxAge  : new Date(Date.now() + 3600000), //1 Hour
+    expires : new Date(Date.now() + 3600000), 
+ }}))
 //app.use(express.session());
 app.use(app.router);
 
