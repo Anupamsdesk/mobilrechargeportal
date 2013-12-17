@@ -24,11 +24,11 @@ Coming soon!
 
 ### Some screenshots
 Login Screen
-![](https://github.com/Anupamsdesk/mobilrechargeportal/schreenshots/a1.png)
+![](https://github.com/Anupamsdesk/mobilrechargeportal/blob/master/screenshots/a1.png)
 User Screen
-![](https://github.com/Anupamsdesk/mobilrechargeportal/schreenshots/a2.png)
+![](https://github.com/Anupamsdesk/mobilrechargeportal/blob/master/screenshots/a2.png)
 Recharge Screen
-![](https://github.com/Anupamsdesk/mobilrechargeportal/schreenshots/a3.png)
+![](https://github.com/Anupamsdesk/mobilrechargeportal/blob/master/screenshots/a3.png)
 
 
 ### Receiving updates from upstream
