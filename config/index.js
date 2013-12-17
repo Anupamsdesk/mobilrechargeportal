@@ -16,18 +16,11 @@ var dbConfig = {
 	, providerCollection: "providers"
 	, transactionCollection: "transactions"
 };
-
-
-var dbService = new Service (dbConfig.host,dbConfig.port,dbConfig.db);
-//var usrs = dbService.Collection("users);
-//usrs.Find();
-
-var userContext = new Context(dbService,dbConfig.userCollection);
-//console.dir(Context.list());
+var dbService = new Service (dbConfig.host, dbConfig.port, dbConfig.db);
+var userContext = new Context(dbService, dbConfig.userCollection);
 var userModel = new UserModel(userContext);
 var provContext = new Context(dbService,dbConfig.providerCollection);
 var providerModel = new ProviderModel(provContext);
-
 
 var phoneModel = new PhoneModel(new Context(dbService,dbConfig.phoneCollection));
 var transModel = new TransactionModel(new Context(dbService,dbConfig.transactionCollection));

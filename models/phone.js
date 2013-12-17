@@ -5,16 +5,12 @@ var model = function(context){
 	if (!context)
 		throw Error("Invalid reference of context");
 
-
 	this.findForUser = function(userid){
 		return context.find({UserId : userid});
-	}
-
+	};
 	this.findNumberAndUser = function(userid, number){
 		return context.find({UserId: userid, Number: number});
-	}
-
-
+	};
 	this.updateBalance = function(userid, number, amount, cb){
 		context.close();
 		this.findNumberAndUser(userid, number).then(function(obj){
@@ -30,15 +26,13 @@ var model = function(context){
 		}, function(x){
 			cb(false);
 		});
-	}
-
+	};
 
 	this.create = function (obj, userid){
 		obj.UserId=userid;
 		obj.Balance=0.0;
 		obj.Group=[];
 		AssureIsValid(obj);		
-		//computeId(obj);
 		return context.add(obj);
 	};
 

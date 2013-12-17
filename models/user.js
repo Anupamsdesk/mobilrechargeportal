@@ -13,7 +13,7 @@ var model = function (context){
 
 	this.findByEmail = function(email){
 		return context.find({Email: email},{});
-	}
+	};
 	this.validateUser = function(email, password, cb){		
 		context.find({Email:email},{}).then(function(obj){
 			if (obj.length === 0){
@@ -25,8 +25,7 @@ var model = function (context){
 				cb(val,obj[0]);	
 			}
 		});
-	}
-
+	};
 
 	this.create = function (obj){
 		AssureIsValid(obj);		
@@ -49,7 +48,7 @@ var model = function (context){
 		var id = obj._id;
 		delete obj._id;
 		return context.update(id, obj);
-	}
+	};
 };
 function AssureIsValid(obj){
 	if (!obj.FirstName || !obj.LastName || !obj.Password || !obj.Email ){
