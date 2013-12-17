@@ -22,6 +22,15 @@ Runs like a typical express app:
 
 Coming soon!
 
+### Some screenshots
+Login Screen
+![](https://github.com/Anupamsdesk/mobilrechargeportal/schreenshots/a1.png)
+User Screen
+![](https://github.com/Anupamsdesk/mobilrechargeportal/schreenshots/a2.png)
+Recharge Screen
+![](https://github.com/Anupamsdesk/mobilrechargeportal/schreenshots/a3.png)
+
+
 ### Receiving updates from upstream
 
 Just fetch the changes and merge them into your project with git.
